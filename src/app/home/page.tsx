@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function Page() {
+export default function HomePage() {
   class Task {
     public id: number;
     public title: string;
@@ -18,7 +18,16 @@ export default function Page() {
       this.editMode = false;
     }
   }
-  const [todoList, setTodoList] = useState(JSON.parse(localStorage.getItem("todoList") || "[]"));
+
+  const [todoList, setTodoList] = useState(new Array<Task>);
+  
+  useEffect(() => {
+    setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+  }, [todoList]);
 
   const addItem = () => {
     const titleElement = document.getElementById("name-input") as HTMLInputElement;
@@ -65,10 +74,6 @@ export default function Page() {
   const removeItem = (id: number) => {
     setTodoList([...todoList.filter((task: Task) => task.id != id)])
   }
-
-  useEffect(() => {
-    localStorage.setItem("todoList", JSON.stringify(todoList));
-  });
 
   return (
     <div>
